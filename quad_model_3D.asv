@@ -1,0 +1,132 @@
+
+
+
+global Quad
+
+%% Define the Initial Coordinates of the Arms and Rotors
+
+% Vertex Values for Y axis arm (m). Measurements from a 3DR kit
+x1=-Quad.l;
+x2=Quad.l;
+y1=-Quad.t;
+y2=Quad.t;
+z1=-Quad.t;
+z2=Quad.t;
+
+% Vertex locations
+vertex_matrix=[x1 y1 z1; 
+   x2 y1 z1;
+   x2 y2 z1;
+   x1 y2 z1;
+   x1 y1 z2;
+   x2 y1 z2;
+   x2 y2 z2;
+   x1 y2 z2];
+
+% Faces Matrix, entries refer to vertices in 
+face_matrix=[1 2 6 5;              
+     2 3 7 6;
+     3 4 8 7;
+     4 1 5 8;
+     1 2 3 4;
+     5 6 7 8];
+
+ 
+ Y_arm=patch('faces',face_matrix,...
+     'vertices',vertex_matrix,...
+     'facecolor','b',...
+     'edgecolor',[0 0 0],'facecolor','b');
+
+axis equal
+% Vertex Values for X axis arm (m). Measurements from a 3DR kit
+y1=-Quad.l;
+y2=Quad.l;
+x1=-Quad.t;
+x2=Quad.t;
+z1=-Quad.t;
+z2=Quad.t;
+
+vertex_matrix=[x1 y1 z1; 
+   x2 y1 z1;
+   x2 y2 z1;
+   x1 y2 z1;
+   x1 y1 z2;
+   x2 y1 z2;
+   x2 y2 z2;
+   x1 y2 z2];
+
+X_arm=patch('faces',face_matrix,...
+     'vertices',vertex_matrix,...
+     'facecolor',[.8 .8 .8],...
+     'edgecolor',[0 0 0],'facecolor',[.4 .5 1]);
+ 
+ % Draw the Rotor area
+ t=0:pi/10:2*pi;    %rotor circumfrence points
+ X=Quad.rot_rad*cos(t);      
+ Y=Quad.rot_rad*sin(t); 
+ Z=zeros(size(t))+Quad.t;
+ C=zeros(size(t));
+ Quad.C = C;
+ 
+ Motor2 = patch(X+Quad.l,Y,Z,C,'facealpha',.3,'facecolor','k'); %(Motor 2)
+ Motor4 = patch(X-Quad.l,Y,Z,C,'facealpha',.3,'facecolor','k'); %(Motor 4)
+ Motor1 = patch(X,Y+Quad.l,Z,C,'facealpha',.3,'facecolor','k'); %(Motor 1)
+ RotorR = patch(X,Y-Quad.l,Z,C,'facealpha',.3,'facecolor','k'); %(Motor 3)
+ 
+ %Coordinates of each face in each axis (4 coordinates x 6 faces)
+ Quad.X_armX = get(X_arm,'xdata');
+ Quad.X_armY = get(X_arm,'ydata');
+ Quad.X_armZ = get(X_arm,'zdata');
+ 
+ Quad.Y_armX = get(Y_arm,'xdata');
+ Quad.Y_armY = get(Y_arm,'ydata');
+ Quad.Y_armZ = get(Y_arm,'zdata');
+  
+ %Coordinates of each rotor in each axis (4 coordinates x 6 faces)
+ Quad.Motor2X = get(Motor2,'xdata');
+ Quad.Motor2Y = get(Motor2,'ydata');
+ Quad.Motor2Z = get(Motor2,'zdata');
+  
+ Quad.Motor4X = get(Motor4,'xdata');
+ Quad.Motor4Y = get(Motor4,'ydata');
+ Quad.Motor4Z = get(Motor4,'zdata');
+  
+ Quad.RotorRX = get(RotorR,'xdata');
+ Quad.RotorRY = get(RotorR,'ydata');
+ Quad.RotorRZ = get(RotorR,'zdata');
+  
+ Quad.Motor1X = get(Motor1,'xdata');
+ Quad.Motor1Y = get(Motor1,'ydata');
+ Quad.Motor1Z = get(Motor1,'zdata');
+   
+%  xlabel('x')
+%  grid on
+%   axis([-1 1 -1 1 -1 1]);
+  axis equal
+  
+%%
+
+Quad.X_arm = patch('xdata',Quad.X_armX,'ydata',Quad.X_armY,'zdata',Quad.X_armZ,'facealpha',.3,'facecolor','b');
+Quad.Y_arm = patch('xdata',Quad.Y_armX,'ydata',Quad.Y_armY,'zdata',Quad.Y_armZ,'facealpha',.3,'facecolor','b');
+Quad.Motor2 = patch('xdata',Quad.Motor2X,'ydata',Quad.Motor2Y,'zdata',Quad.Motor2Z,'facealpha',.3,'facecolor','k');
+Quad.Motor4 = patch('xdata',Quad.Motor4X,'ydata',Quad.Motor4Y,'zdata',Quad.Motor4Z,'facealpha',.3,'facecolor','k');
+Quad.RotorR = patch('xdata',Quad.RotorRX,'ydata',Quad.RotorRY,'zdata',Quad.RotorRZ,'facealpha',.3,'facecolor','k');
+Quad.Motor1 = patch('xdata',Quad.Motor1X,'ydata',Quad.Motor1Y,'zdata',Quad.Motor1Z,'facealpha',.3,'facecolor','k');
+
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.Body1X,Quad.Body1Y,Quad.Body1Z,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.Body1,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)
+% 
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.Body2X,Quad.Body2Y,Quad.Body2Z,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.Body2,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)
+% 
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.Motor2X,Quad.Motor2Y,Quad.Motor2Z,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.Motor2,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)
+% 
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.Motor4X,Quad.Motor4Y,Quad.Motor4Z,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.Motor4,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)
+% 
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.RotorLX,Quad.RotorLY,Quad.RotorLZ,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.RotorL,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)
+% 
+% [Quad.X22,Quad.Y22,Quad.Z22]=rotateXYZ2(Quad.RotorRX,Quad.RotorRY,Quad.RotorRZ,Quad.phi,Quad.theta,Quad.psi);
+% set(Quad.RotorR,'xdata',Quad.X22+Quad.X,'ydata',Quad.Y22+Quad.Y,'zdata',Quad.Z22+Quad.Z)

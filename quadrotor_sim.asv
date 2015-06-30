@@ -1,0 +1,45 @@
+%-----------------------------------------------------------------------%
+%                                                                       %
+%   This script simulates a quadrotor.                                  %
+%                                                                       %
+%   Done By: Wil Selby                                                  %
+%                                                                       %
+%                                                                       %
+%-----------------------------------------------------------------------%
+
+%% Initialize Workspace
+clear all;
+clc;
+
+global Quad;
+
+%% Initialize Variables
+quad_variables;
+Quad.U1 = 9.81;
+quad_dynamics;
+
+%% Initialize the plot
+init_plot;
+
+%% Run The Simulation Loop
+while Quad.t_plot(Quad.counter-1)< max(Quad.t_plot);    
+    %% Measure Parameters (for simulating sensor errors)
+    
+    
+    %% Implement Controller
+    quad_PID;
+    
+    %% Calculate Desired Motor Speeds
+    %quad_motor;
+    
+    %% Update Position With The Equations of Motion
+    quad_dynamics;    
+    
+    %% Plot
+    quad_plot_3D
+    
+    Quad.init = 1;  %Ends initilization after first simulation iteration
+end
+
+figure;
+%plot(Quad.t_plot,Quad.Z_plot)

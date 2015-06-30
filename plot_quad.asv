@@ -1,0 +1,28 @@
+% Wil Selby
+% Washington, DC
+% May 30, 2015
+
+% This function draws the quadrotor model by rotating the original Body
+% Frame coordinates used to define the quadrotor in plot_quad_model.m into
+% Global Frame coordinates. It then moves the quadrotor to the current
+% Global Position output from the quadrotor dynamics
+
+global Quad
+
+[Quad.Xtemp,Quad.Ytemp,Quad.Ztemp]=rotateXYZ2(Quad.X_armX,Quad.X_armY,Quad.X_armZ,Quad.phi,Quad.theta,Quad.psi);
+set(Quad.Body1,'xdata',Quad.Xtemp+Quad.X,'ydata',Quad.Ytemp+Quad.Y,'zdata',Quad.Ztemp+Quad.Z)
+
+[Quad.Xtemp,Quad.Ytemp,Quad.Ztemp]=rotateXYZ2(Quad.Y_armX,Quad.Y_armY,Quad.Y_armZ,Quad.phi,Quad.theta,Quad.psi);
+set(Quad.Body2,'xdata',Quad.Xtemp+Quad.X,'ydata',Quad.Ytemp+Quad.Y,'zdata',Quad.Ztemp+Quad.Z)
+
+[Quad.Xtemp,Quad.Ytemp,Quad.Ztemp]=rotateXYZ2(Quad.Motor2X,Quad.Motor2Y,Quad.Motor2Z,Quad.phi,Quad.theta,Quad.psi);
+set(Quad.Motor2,'xdata',Quad.Xtemp+Quad.X,'ydata',Quad.Ytemp+Quad.Y,'zdata',Quad.Ztemp+Quad.Z)
+
+[Quad.Xtemp,Quad.Ytemp,Quad.Ztemp]=rotateXYZ2(Quad.Motor4X,Quad.Motor4Y,Quad.Motor4Z,Quad.phi,Quad.theta,Quad.psi);
+set(Quad.Motor4,'xdata',Quad.Xtemp+Quad.X,'ydata',Quad.Ytemp+Quad.Y,'zdata',Quad.Ztemp+Quad.Z)
+
+
+[Quad.Xtemp,Quad.Ytemp,Quad.Ztemp]=rotateXYZ2(Quad.Motor3X,Quad.RotorRY,Quad.RotorRZ,Quad.phi,Quad.theta,Quad.psi);
+set(Quad.RotorR,'xdata',Quad.Xtemp+Quad.X,'ydata',Quad.Ytemp+Quad.Y,'zdata',Quad.Ztemp+Quad.Z)
+
+
