@@ -25,6 +25,28 @@ Quad.phi_dot   = Quad.p + sin(Quad.phi)*tan(Quad.theta)*Quad.q + cos(Quad.phi)*t
 Quad.theta_dot = cos(Quad.phi)*Quad.q - sin(Quad.phi)*Quad.r;
 Quad.psi_dot   = sin(Quad.phi)/cos(Quad.theta)*Quad.q + cos(Quad.phi)/cos(Quad.theta)*Quad.r;
 
+%% IMU Sensor noise model
+
+if(Quad.sensor_unfiltered)
+    
+    Quad.X_ddot = Quad.x_acc_bias + Quad.x_acc_sd*randn(1);
+    Quad.Y_ddot = Quad.y_acc_bias + Quad.y_acc_sd*randn(1);
+    Quad.Z_ddot = Quad.z_acc_bias + Quad.z_acc_sd*randn(1);
+    
+    Quad.p_dot = Quad.x_gyro_bias + Quad.x_guro_sd*randn(1);
+    Quad.q_dot = Quad.y_gyro_bias + Quad.y_guro_sd*randn(1);
+    Quad.r_dot = Quad.z_gyro_bias + Quad.z_guro_sd*randn(1);
+    
+end
+%% Disturbance model
+
+Quad.X_ddot = Quad.X_ddot + Quad.X_dis/Quad.m; 
+Quad.Y_ddot = Quad.Y_ddot + Quad.Y_dis/Quad.m; 
+Quad.Z_ddot = Quad.Z_ddot + Quad.Z_dis/Quad.m; 
+Quad.phi_dot = Quad.phi_dot + Quad.phi_dis/Quad.Jx*Quad.Ts; 
+Quad.theta_dot = Quad.theta_dot + Quad.theta_dis/Quad.Jy*Quad.Ts; 
+Quad.psi_dot = Quad.psi_dot + Quad.psi_dis/Quad.Jz*Quad.Ts;
+
 %% Update Velocities and Positions
 
 % Calculating the Z velocity & position

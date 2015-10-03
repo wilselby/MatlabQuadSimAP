@@ -25,10 +25,16 @@ Quad.phi_dot   = Quad.p + sin(Quad.phi)*tan(Quad.theta)*Quad.q + cos(Quad.phi)*t
 Quad.theta_dot = cos(Quad.phi)*Quad.q - sin(Quad.phi)*Quad.r;
 Quad.psi_dot   = sin(Quad.phi)/cos(Quad.theta)*Quad.q + cos(Quad.phi)/cos(Quad.theta)*Quad.r;
 
+%% Disturbance model
+
+Quad.X_ddot = Quad.X_ddot + Quad.X_dis/Quad.m; 
+Quad.Y_ddot = Quad.Y_ddot + Quad.Y_dis/Quad.m; 
+Quad.Z_ddot = Quad.Z_ddot + Quad.Z_dis/Quad.m; 
+Quad.phi_dot = Quad.phi_dot + Quad.phi_dis/Quad.Jx*Quad.Ts; 
+Quad.theta_dot = Quad.theta_dot + Quad.theta_dis/Quad.Jy*Quad.Ts; 
+Quad.psi_dot = Quad.psi_dot + Quad.psi_dis/Quad.Jz*Quad.Ts;
+
 %% Update Velocities and Positions
-% Quad.phi_ddot = Quad.p_dot;
-% Quad.theta_ddot = Quad.q_dot;
-% Quad.psi_ddot = Quad.r_dot;
 
 % Calculating the Z velocity & position
 Quad.Z_dot = Quad.Z_ddot*Quad.Ts + Quad.Z_dot;
@@ -43,24 +49,20 @@ Quad.Y_dot = Quad.Y_ddot*Quad.Ts + Quad.Y_dot;
 Quad.Y = Quad.Y_dot*Quad.Ts + Quad.Y;
 
 % Calculating p,q,r
-%Quad.p = Quad.p_dot*Quad.Ts+Quad.p;
-%Quad.q = Quad.q_dot*Quad.Ts+Quad.q;
-%Quad.r = Quad.r_dot*Quad.Ts+Quad.r;
+Quad.p = Quad.p_dot*Quad.Ts+Quad.p;
+Quad.q = Quad.q_dot*Quad.Ts+Quad.q;
+Quad.r = Quad.r_dot*Quad.Ts+Quad.r;
+
 % Calculating angular velocity and position
 Quad.phi = Quad.phi_dot*Quad.Ts + Quad.phi;
 Quad.theta = Quad.theta_dot*Quad.Ts+Quad.theta;
 Quad.psi = Quad.psi_dot*Quad.Ts+Quad.psi;
 
-
-% Quad.p = Quad.phi_dot;
-% Quad.q = Quad.theta_dot;
-% Quad.r = Quad.psi_dot;
-
 %% Update Plotting Variables
 
-% Plotting variables
-Quad.Z_plot(Quad.counter) = Quad.Z;
-Quad.Z_ref_plot(Quad.counter) = Quad.Z_des;
+% Flip positive Z axis up for intuitive plotting
+Quad.Z_plot(Quad.counter) = -Quad.Z;
+Quad.Z_ref_plot(Quad.counter) = -Quad.Z_des;
 
 Quad.X_plot(Quad.counter) = Quad.X;
 Quad.X_ref_plot(Quad.counter) = Quad.X_des;

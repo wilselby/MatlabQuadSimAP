@@ -1,0 +1,111 @@
+% Wil Selby
+% Washington, DC
+% May 30, 2015
+
+% This function implements a Proportional Integral Derivative Controller
+% (PID) for the quadrotor. A lower level controller takes those inputs and 
+% controls the error between the deisred and actual Euler angles. 
+
+function inner_PID
+
+persistent z_error_sum;
+persistent phi_error_sum;
+persistent theta_error_sum;
+persistent psi_error_sum;
+
+global Quad
+
+% initialize persistent variables at beginning of simulation
+if Quad.init==0
+    z_error_sum = 0;
+    phi_error_sum = 0;
+    theta_error_sum = 0;
+    psi_error_sum = 0;
+end
+
+% Measurement Model
+if(Quad.ground_truth)
+    phi = Quad.phi;
+    theta = Quad.theta;
+    psi = Quad.psi;
+end
+
+if(Quad.sensor_unfiltered)
+    phi = Quad.phi_meas;
+    theta = Quad.theta_meas;
+    psi = Quad.psi_meas;
+end
+
+if(Quad.sensor_kf)
+    phi = Quad.phi;
+    theta = Quad.theta;
+    psi = Quad.psi;
+end
+
+
+%% Z Position PID Controller/Altitude Controller
+z_error = Quad.Z_des_GF-Quad.Z_BF;
+if(abs(z_error) < Quad.Z_KI_lim)
+    z_error_sum = z_error_sum + z_error;
+end
+cp = Quad.Z_KP*z_error;         %Proportional term
+ci = Quad.Z_KI*Quad.Ts*z_error_sum; %Integral term
+ci = min(Quad.U1_max, max(Quad.U1_min, ci));    %Saturate ci
+cd = Quad.Z_KD*Quad.Z_dot;                  %Derivative term
+Quad.U1 = -(cp + ci + cd)/(cos(theta)*cos(phi)) + (Quad.m * Quad.g)/(cos(theta)*cos(phi));   %Negative since Thurst and Z inversely related
+Quad.U1 = min(Quad.U1_max, max(Quad.U1_min, Quad.U1));
+
+
+%% Attitude Controller
+
+% Roll PID Controller
+phi_error = Quad.phi_des - phi;
+if(abs(phi_error) < Quad.phi_KI_lim)
+    phi_error_sum = phi_error_sum + phi_error;
+end
+cp = Quad.phi_KP*phi_error;
+ci = Quad.phi_KI*Quad.Ts*phi_error_sum;
+ci = min(Quad.U2_max, max(Quad.U2_min, ci));
+cd = Quad.phi_KD*Quad.p;
+Quad.U2 = cp + ci + cd;
+Quad.U2 = min(Quad.U2_max, max(Quad.U2_min, Quad.U2));
+
+% Pitch PID Controller
+theta_error = Quad.theta_des - theta;
+if(abs(theta_error) < Quad.theta_KI_lim)
+    theta_error_sum = theta_error_sum + theta_error;
+end
+cp = Quad.theta_KP*theta_error;
+ci = Quad.theta_KI*Quad.Ts*theta_error_sum;
+ci = min(Quad.U3_max, max(Quad.U3_min, ci));
+cd = Quad.theta_KD*Quad.q;
+Quad.U3 = cp + ci + cd;
+Quad.U3 = min(Quad.U3_max, max(Quad.U3_min, Quad.U3));
+
+% Yaw PID Controller
+psi_error = Quad.psi_des - psi;
+if(abs(psi
+psi_error_sum = psi_error_sum + psi_error;
+cp = Quad.psi_KP*psi_error;
+ci = Quad.psi_KI*Quad.Ts*psi_error_sum;
+ci = min(Quad.U4_max, max(Quad.U4_min, ci));
+cd = Quad.psi_KD*Quad.r;
+Quad.U4 = cp + ci + cd;
+Quad.U4 = min(Quad.U4_max, max(Quad.U4_min, Quad.U4));
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

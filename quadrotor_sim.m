@@ -7,6 +7,9 @@
 %                                                                       %
 %-----------------------------------------------------------------------%
 
+% Add Paths
+addpath utilities
+
 %% Initialize Workspace
 clear all;
 close all;
@@ -24,23 +27,30 @@ quad_dynamics_nonlinear;
 
 %% Run The Simulation Loop
 while Quad.t_plot(Quad.counter-1)< max(Quad.t_plot);    
-    %% Measure Parameters (for simulating sensor errors)
     
+    % Measure Parameters (for simulating sensor errors)
+      sensor_meas;
+
+    % Filter Measurements
+%     Kalman_phi2;
+%     Kalman_theta2;
+%     Kalman_psi2;
+%     Kalman_Z2;
+%     Kalman_X2;
+%     Kalman_Y2;
     
-    %% Filter Measurements
+    % Implement Controller
+    position_PID;
+    attitude_PID;
+    rate_PID;
     
-    
-    %% Implement Controller
-    outer_PID;
-    inner_PID;
-    
-    %% Calculate Desired Motor Speeds
+    % Calculate Desired Motor Speeds
     quad_motor_speed;
     
-    %% Update Position With The Equations of Motion
+    % Update Position With The Equations of Motion
     quad_dynamics_nonlinear;    
     
-    %% Plot the Quadrotor's Position
+    % Plot the Quadrotor's Position
     if(mod(Quad.counter,3)==0)
         plot_quad 
         
@@ -51,7 +61,7 @@ while Quad.t_plot(Quad.counter-1)< max(Quad.t_plot);
         drawnow
     end
     
-    Quad.init = 1;  %Ends initilization after first simulation iteration
+    Quad.init = 1;  %Ends initialization after first simulation iteration
 end
 
 %% Plot Data

@@ -14,10 +14,10 @@ function quad_motor_speed
 global Quad
 
 % Calculate motor speeds (rad/s)^2
-w1 = Quad.U1/(4*Quad.KT) - Quad.U3/(2*Quad.KT*Quad.l) - Quad.U4/(4*Quad.Kd);
-w2 = Quad.U1/(4*Quad.KT) - Quad.U2/(2*Quad.KT*Quad.l) + Quad.U4/(4*Quad.Kd);
-w3 = Quad.U1/(4*Quad.KT) + Quad.U3/(2*Quad.KT*Quad.l) - Quad.U4/(4*Quad.Kd);
-w4 = Quad.U1/(4*Quad.KT) + Quad.U2/(2*Quad.KT*Quad.l) + Quad.U4/(4*Quad.Kd);
+w1 = Quad.U1/(4*Quad.KT) - Quad.U3/(2*Quad.KT*Quad.l) + Quad.U4/(4*Quad.Kd);
+w2 = Quad.U1/(4*Quad.KT) - Quad.U2/(2*Quad.KT*Quad.l) - Quad.U4/(4*Quad.Kd);
+w3 = Quad.U1/(4*Quad.KT) + Quad.U3/(2*Quad.KT*Quad.l) + Quad.U4/(4*Quad.Kd);
+w4 = Quad.U1/(4*Quad.KT) + Quad.U2/(2*Quad.KT*Quad.l) - Quad.U4/(4*Quad.Kd);
 
 % Apply realistic motor speed limits
 if w1 > Quad.max_motor_speed
@@ -62,19 +62,16 @@ Quad.O4_plot(Quad.counter) = Quad.O4;
 %% Re-compute traditional control inputs
 
 Quad.U1 = Quad.KT*(Quad.O1^2 + Quad.O2^2 + Quad.O3^2 + Quad.O4^2);
-Quad.U1_plot(Quad.counter) = Quad.U1;
+% Quad.U1_plot(Quad.counter) = Quad.U1;
   
-%   Quad.U21_plot(Quad.counter) = Quad.U1;
-Quad.U2 = Quad.KT*Quad.l*(sign(Quad.O4)*Quad.O4^2 - sign(Quad.O2)*Quad.O2^2);
-  Quad.U2_plot(Quad.counter) = Quad.U2;
+Quad.U2 = Quad.KT*Quad.l*(Quad.O4^2 - Quad.O2^2);
+Quad.U2_plot(Quad.counter) = Quad.U2;
   
-%   Quad.U31_plot(Quad.counter) = Quad.U1;
-Quad.U3 = Quad.KT*Quad.l*(sign(Quad.O3)*Quad.O3^2 - sign(Quad.O1)*Quad.O1^2);
-  Quad.U3_plot(Quad.counter) = Quad.U3;
+Quad.U3 = Quad.KT*Quad.l*(Quad.O3^2 - Quad.O1^2);
+Quad.U3_plot(Quad.counter) = Quad.U3;
   
-%   Quad.U41_plot(Quad.counter) = Quad.U1;
-Quad.U4 = Quad.Kd*(sign(Quad.O2)*Quad.O2^2 + sign(Quad.O4)*Quad.O4^2 - sign(Quad.O1)*Quad.O1^2 - sign(Quad.O3)*Quad.O3^2);
-  Quad.U4_plot(Quad.counter) = Quad.U4;
+Quad.U4 = Quad.Kd*(Quad.O1^2 + Quad.O3^2 - Quad.O2^2 - Quad.O4^2);
+Quad.U4_plot(Quad.counter) = Quad.U4;
   
 Quad.O = (-Quad.O1 + Quad.O2 - Quad.O3 + Quad.O4);
   Quad.O_plot(Quad.counter) = Quad.O;
